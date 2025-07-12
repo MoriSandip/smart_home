@@ -1,8 +1,8 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import DashboardScreen from '../screens/DashboardScreen';
-import RoomDetailScreen from '../screens/RoomDetailScreen';
+import DashboardScreen from '../screens/Dashboard';
+import RoomDetailScreen from '../screens/RoomDetail';
 
 export type RootStackParamList = {
     Dashboard: undefined;

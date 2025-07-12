@@ -1,97 +1,198 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Smart Home Control Panel
 
-# Getting Started
+A modern React Native mobile application for controlling smart home devices with a beautiful, intuitive interface.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+## Features
 
-## Step 1: Start Metro
+### 🏠 Dashboard
+- **Dynamic Greeting**: Personalized greeting based on time of day (Good Morning, Good Afternoon, Good Evening, Good Night)
+- **Weather Integration**: Real-time weather data with temperature toggle (°C ↔ °F)
+- **Energy Usage**: Live energy consumption monitoring (current, daily, monthly)
+- **Room Overview**: Horizontally scrollable room cards with active device counts
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+### 🏘️ Room Management
+- **Room Selection**: Tap any room to view its devices
+- **Visual Room Cards**: Each room has a unique color and icon
+- **Device Count**: Shows number of active devices per room
+- **Smooth Navigation**: Animated transitions between screens
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+### 🔌 Device Control
+- **Device Grid**: Clean grid layout of devices in each room
+- **Toggle Controls**: Easy on/off switches for all devices
+- **Status Indicators**: Visual status with color-coded indicators
+- **Live Values**: Real-time readings for temperature, brightness, etc.
+- **Device Types**: Support for lights, AC, TV, fans, doors, cameras
 
-```sh
-# Using npm
-npm start
+### 🌡️ Weather Integration
+- **Live Weather**: Current temperature and conditions
+- **Temperature Toggle**: Switch between Celsius and Fahrenheit
+- **Weather Icons**: Visual weather representation
+- **API Ready**: Configured for OpenWeatherMap API
 
-# OR using Yarn
-yarn start
+### 💾 State Management
+- **Redux Toolkit**: Global state management
+- **Persistence**: Device states saved to local storage
+- **Temperature Units**: User preference persistence
+- **Async Operations**: Weather data fetching
+
+## Tech Stack
+
+- **React Native**: 0.80.1
+- **TypeScript**: Full type safety
+- **Redux Toolkit**: State management
+- **React Navigation**: Screen navigation
+- **React Native Vector Icons**: Beautiful icons
+- **AsyncStorage**: Local data persistence
+
+## Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd SmartHome
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Install iOS dependencies** (iOS only)
+   ```bash
+   cd ios && pod install && cd ..
+   ```
+
+4. **Run the app**
+   ```bash
+   # For iOS
+   npm run ios
+   
+   # For Android
+   npm run android
+   ```
+
+## Configuration
+
+### Weather API Setup
+To enable real weather data:
+
+1. Get an API key from [OpenWeatherMap](https://openweathermap.org/api)
+2. Update `src/services/weatherService.ts`:
+   ```typescript
+   const API_KEY = 'YOUR_OPENWEATHERMAP_API_KEY';
+   const CITY = 'Your City Name';
+   ```
+3. Uncomment the API call in the `fetchWeatherData` function
+
+## Project Structure
+
+```
+src/
+├── components/          # Reusable UI components
+│   ├── WeatherCard.tsx
+│   ├── EnergyCard.tsx
+│   ├── RoomCard.tsx
+│   └── DeviceCard.tsx
+├── screens/            # Main app screens
+│   ├── DashboardScreen.tsx
+│   └── RoomDetailScreen.tsx
+├── store/              # Redux store and slices
+│   ├── index.ts
+│   ├── hooks.ts
+│   └── smartHomeSlice.ts
+├── navigation/         # Navigation setup
+│   └── AppNavigator.tsx
+├── services/           # API services
+│   └── weatherService.ts
+├── types/              # TypeScript type definitions
+│   └── index.ts
+└── utils/              # Helper functions
+    └── helpers.ts
 ```
 
-## Step 2: Build and run your app
+## Features in Detail
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+### Dynamic Greeting
+The app automatically displays appropriate greetings based on the current time:
+- 5:00 AM - 11:59 AM: "Good Morning"
+- 12:00 PM - 4:59 PM: "Good Afternoon"
+- 5:00 PM - 8:59 PM: "Good Evening"
+- 9:00 PM - 4:59 AM: "Good Night"
 
-### Android
+### Room Management
+- **Living Room**: Smart Light, Air Conditioner, Smart TV
+- **Bedroom**: Bedside Lamp, Ceiling Fan
+- **Kitchen**: Kitchen Light, Refrigerator, Microwave
+- **Bathroom**: Bathroom Light
+- **Office**: Desk Lamp, Security Camera
 
-```sh
-# Using npm
-npm run android
+### Device Types
+Each device supports:
+- **Toggle State**: On/Off functionality
+- **Live Values**: Temperature, brightness, speed readings
+- **Status Indicators**: Color-coded status dots
+- **Icons**: Device-specific icons
+- **Persistence**: States saved to local storage
 
-# OR using Yarn
-yarn android
-```
+### Weather Integration
+- **Mock Data**: Currently uses mock weather data
+- **API Ready**: Configured for OpenWeatherMap integration
+- **Temperature Toggle**: Global temperature unit switching
+- **Error Handling**: Graceful fallback for API failures
 
-### iOS
+## State Management
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+The app uses Redux Toolkit for state management with the following features:
 
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+### Smart Home Slice
+- **Rooms**: Room data and selection
+- **Devices**: Device states and values
+- **Weather**: Current weather information
+- **Energy Usage**: Consumption data
+- **Settings**: Temperature units, loading states
 
-```sh
-bundle install
-```
+### Persistence
+- **AsyncStorage**: Device states and user preferences
+- **Automatic Loading**: State restoration on app launch
+- **Real-time Updates**: Immediate UI updates on state changes
 
-Then, and every time you update your native dependencies, run:
+## Navigation
 
-```sh
-bundle exec pod install
-```
+The app uses React Navigation with:
+- **Stack Navigator**: Dashboard ↔ Room Detail
+- **Smooth Transitions**: Custom slide animations
+- **Type Safety**: Fully typed navigation parameters
+- **Header Management**: Custom headers for each screen
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+## Styling
 
-```sh
-# Using npm
-npm run ios
+The app features a modern, clean design with:
+- **iOS-style Design**: Native look and feel
+- **Card-based Layout**: Clean, organized information display
+- **Color-coded Rooms**: Unique colors for each room
+- **Status Indicators**: Visual feedback for device states
+- **Responsive Design**: Adapts to different screen sizes
 
-# OR using Yarn
-yarn ios
-```
+## Future Enhancements
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+- [ ] Real-time device synchronization
+- [ ] Push notifications for device alerts
+- [ ] Voice control integration
+- [ ] Scene/automation support
+- [ ] User authentication
+- [ ] Multi-home support
+- [ ] Device scheduling
+- [ ] Energy usage analytics
+- [ ] Dark mode support
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+## Contributing
 
-## Step 3: Modify your app
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
 
-Now that you have successfully run the app, let's make changes!
+## License
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
-
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
-
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+This project is licensed under the MIT License.

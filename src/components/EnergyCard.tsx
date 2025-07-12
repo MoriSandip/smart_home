@@ -1,12 +1,37 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Animated } from 'react-native';
 import { useAppSelector } from '../store/hooks';
 
-const EnergyCard: React.FC = () => {
+interface EnergyCardProps {
+    scrollY?: Animated.Value;
+}
+
+const EnergyCard: React.FC<EnergyCardProps> = ({ scrollY }) => {
     const { energyUsage } = useAppSelector((state) => state.smartHome);
 
+    // Parallax effect for energy card
+    const cardTranslateY = scrollY ? scrollY.interpolate({
+        inputRange: [-1, 0, 100, 101],
+        outputRange: [0, 0, -5, -5],
+        extrapolate: 'clamp',
+    }) : 0;
+
+    const cardScale = scrollY ? scrollY.interpolate({
+        inputRange: [-1, 0, 100, 101],
+        outputRange: [1, 1, 0.98, 0.98],
+        extrapolate: 'clamp',
+    }) : 1;
+
     return (
-        <View style={styles.container}>
+        <Animated.View style={[
+            styles.container,
+            {
+                transform: [
+                    { translateY: cardTranslateY },
+                    { scale: cardScale },
+                ],
+            }
+        ]}>
             <View style={styles.header}>
                 <View style={styles.titleContainer}>
                     <Text style={styles.title}>⚡ Energy Usage</Text>
@@ -66,7 +91,7 @@ const EnergyCard: React.FC = () => {
                     <Text style={styles.efficiencyText}>On Track</Text>
                 </View>
             </View>
-        </View>
+        </Animated.View>
     );
 };
 

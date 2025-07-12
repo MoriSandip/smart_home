@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
     View,
     Text,
@@ -7,6 +7,8 @@ import {
     FlatList,
     SafeAreaView,
     StatusBar,
+    Animated,
+    Dimensions,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
@@ -16,6 +18,11 @@ import WeatherCard from '../components/WeatherCard';
 import EnergyCard from '../components/EnergyCard';
 import RoomCard from '../components/RoomCard';
 
+const { width: screenWidth } = Dimensions.get('window');
+const HEADER_MAX_HEIGHT = 200;
+const HEADER_MIN_HEIGHT = 80;
+const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
+
 const DashboardScreen: React.FC = () => {
     const dispatch = useAppDispatch();
     const navigation = useNavigation();
@@ -23,15 +30,55 @@ const DashboardScreen: React.FC = () => {
         (state) => state.smartHome
     );
 
+    // Animation values
+    const scrollY = useRef(new Animated.Value(0)).current;
+    const headerHeight = scrollY.interpolate({
+        inputRange: [0, HEADER_SCROLL_DISTANCE],
+        outputRange: [HEADER_MAX_HEIGHT, HEADER_MIN_HEIGHT],
+        extrapolate: 'clamp',
+    });
+
+    const headerOpacity = scrollY.interpolate({
+        inputRange: [0, HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
+        outputRange: [1, 0.8, 0.6],
+        extrapolate: 'clamp',
+    });
+
+    const greetingOpacity = scrollY.interpolate({
+        inputRange: [0, HEADER_SCROLL_DISTANCE / 2],
+        outputRange: [1, 0],
+        extrapolate: 'clamp',
+    });
+
+    const greetingScale = scrollY.interpolate({
+        inputRange: [0, HEADER_SCROLL_DISTANCE / 2],
+        outputRange: [1, 0.8],
+        extrapolate: 'clamp',
+    });
+
+    const titleOpacity = scrollY.interpolate({
+        inputRange: [HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
+        outputRange: [0, 1],
+        extrapolate: 'clamp',
+    });
+
+    const titleTranslateY = scrollY.interpolate({
+        inputRange: [HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
+        outputRange: [20, 0],
+        extrapolate: 'clamp',
+    });
+
     useEffect(() => {
         dispatch(loadPersistedState());
         dispatch(fetchWeatherAsync());
     }, [dispatch]);
 
-    const renderRoomCard = ({ item }: { item: any }) => (
+    const renderRoomCard = ({ item, index }: { item: any; index: number }) => (
         <RoomCard
             room={item}
             isSelected={selectedRoomId === item.id}
+            scrollY={scrollY}
+            index={index}
         />
     );
 
@@ -43,12 +90,36 @@ const DashboardScreen: React.FC = () => {
     }, [selectedRoomId, navigation]);
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <StatusBar barStyle="light-content" backgroundColor="#1a1a2e" />
 
-            {/* Header Section */}
-            <View style={styles.header}>
-                <View style={styles.greetingContainer}>
+            {/* Animated Header */}
+            <Animated.View style={[
+                styles.header,
+                {
+                    height: headerHeight,
+                    opacity: headerOpacity,
+                }
+            ]}>
+                {/* Collapsed Title */}
+                <Animated.View style={[
+                    styles.collapsedTitle,
+                    {
+                        opacity: titleOpacity,
+                        transform: [{ translateY: titleTranslateY }],
+                    }
+                ]}>
+                    <Text style={styles.collapsedTitleText}>🏠 Smart Home</Text>
+                </Animated.View>
+
+                {/* Expanded Greeting */}
+                <Animated.View style={[
+                    styles.greetingContainer,
+                    {
+                        opacity: greetingOpacity,
+                        transform: [{ scale: greetingScale }],
+                    }
+                ]}>
                     <Text style={styles.greeting}>{getGreeting()}</Text>
                     <Text style={styles.subtitle}>Welcome to your Smart Home</Text>
                     <Text style={styles.dateText}>
@@ -59,17 +130,23 @@ const DashboardScreen: React.FC = () => {
                             day: 'numeric'
                         })}
                     </Text>
-                </View>
-            </View>
+                </Animated.View>
+            </Animated.View>
 
-            <ScrollView
+            {/* Scrollable Content */}
+            <Animated.ScrollView
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={styles.scrollContent}
+                onScroll={Animated.event(
+                    [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+                    { useNativeDriver: false }
+                )}
+                scrollEventThrottle={16}
             >
                 {/* Weather and Energy Cards */}
                 <View style={styles.cardsContainer}>
-                    <WeatherCard />
-                    <EnergyCard />
+                    <WeatherCard scrollY={scrollY} />
+                    <EnergyCard scrollY={scrollY} />
                 </View>
 
                 {/* Rooms Section */}
@@ -126,8 +203,8 @@ const DashboardScreen: React.FC = () => {
 
                 {/* Bottom Spacing */}
                 <View style={styles.bottomSpacing} />
-            </ScrollView>
-        </SafeAreaView>
+            </Animated.ScrollView>
+        </View>
     );
 };
 
@@ -139,7 +216,6 @@ const styles = StyleSheet.create({
     header: {
         backgroundColor: '#1a1a2e',
         paddingTop: 20,
-        paddingBottom: 30,
         paddingHorizontal: 20,
         borderBottomLeftRadius: 25,
         borderBottomRightRadius: 25,
@@ -151,8 +227,28 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.1,
         shadowRadius: 8,
         elevation: 8,
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 1000,
+    },
+    collapsedTitle: {
+        position: 'absolute',
+        top: 20,
+        left: 20,
+        right: 20,
+        alignItems: 'center',
+    },
+    collapsedTitleText: {
+        fontSize: 18,
+        fontWeight: '700',
+        color: '#ffffff',
+        textAlign: 'center',
     },
     greetingContainer: {
+        flex: 1,
+        justifyContent: 'center',
         alignItems: 'flex-start',
     },
     greeting: {
@@ -174,10 +270,10 @@ const styles = StyleSheet.create({
         fontWeight: '400',
     },
     scrollContent: {
+        paddingTop: HEADER_MAX_HEIGHT + 20,
         paddingBottom: 20,
     },
     cardsContainer: {
-        marginTop: 20,
         marginBottom: 30,
     },
     roomsSection: {

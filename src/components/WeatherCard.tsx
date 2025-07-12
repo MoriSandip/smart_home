@@ -5,35 +5,77 @@ import {
     StyleSheet,
     TouchableOpacity,
     ActivityIndicator,
+    Animated,
 } from 'react-native';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { toggleTemperatureUnit } from '../store/smartHomeSlice';
 import { formatTemperature } from '../utils/helpers';
 
-const WeatherCard: React.FC = () => {
+interface WeatherCardProps {
+    scrollY?: Animated.Value;
+}
+
+const WeatherCard: React.FC<WeatherCardProps> = ({ scrollY }) => {
     const dispatch = useAppDispatch();
     const { weather, temperatureUnit, isLoading } = useAppSelector(
         (state) => state.smartHome
     );
 
+    // Parallax effect for weather card
+    const cardTranslateY = scrollY ? scrollY.interpolate({
+        inputRange: [-1, 0, 100, 101],
+        outputRange: [0, 0, -5, -5],
+        extrapolate: 'clamp',
+    }) : 0;
+
+    const cardScale = scrollY ? scrollY.interpolate({
+        inputRange: [-1, 0, 100, 101],
+        outputRange: [1, 1, 0.98, 0.98],
+        extrapolate: 'clamp',
+    }) : 1;
+
     if (isLoading) {
         return (
-            <View style={styles.container}>
+            <Animated.View style={[
+                styles.container,
+                {
+                    transform: [
+                        { translateY: cardTranslateY },
+                        { scale: cardScale },
+                    ],
+                }
+            ]}>
                 <ActivityIndicator size="large" color="#007AFF" />
-            </View>
+            </Animated.View>
         );
     }
 
     if (!weather) {
         return (
-            <View style={styles.container}>
+            <Animated.View style={[
+                styles.container,
+                {
+                    transform: [
+                        { translateY: cardTranslateY },
+                        { scale: cardScale },
+                    ],
+                }
+            ]}>
                 <Text style={styles.errorText}>Weather data unavailable</Text>
-            </View>
+            </Animated.View>
         );
     }
 
     return (
-        <View style={styles.container}>
+        <Animated.View style={[
+            styles.container,
+            {
+                transform: [
+                    { translateY: cardTranslateY },
+                    { scale: cardScale },
+                ],
+            }
+        ]}>
             <View style={styles.header}>
                 <View style={styles.titleContainer}>
                     <Text style={styles.title}>🌤️ Weather</Text>
@@ -84,7 +126,7 @@ const WeatherCard: React.FC = () => {
                     <Text style={styles.detailText}>10 km</Text>
                 </View>
             </View>
-        </View>
+        </Animated.View>
     );
 };
 

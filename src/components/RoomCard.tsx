@@ -13,9 +13,11 @@ import { Room } from '../types';
 interface RoomCardProps {
     room: Room;
     isSelected: boolean;
+    scrollY?: Animated.Value;
+    index?: number;
 }
 
-const RoomCard: React.FC<RoomCardProps> = ({ room, isSelected }) => {
+const RoomCard: React.FC<RoomCardProps> = ({ room, isSelected, scrollY, index = 0 }) => {
     const dispatch = useAppDispatch();
     const { devices } = useAppSelector((state) => state.smartHome);
 
@@ -43,65 +45,97 @@ const RoomCard: React.FC<RoomCardProps> = ({ room, isSelected }) => {
         return emojiMap[iconName] || '🏠';
     };
 
+    // Parallax effect for room cards
+    const cardTranslateY = scrollY ? scrollY.interpolate({
+        inputRange: [-1, 0, 100, 101],
+        outputRange: [0, 0, -10, -10],
+        extrapolate: 'clamp',
+    }) : 0;
+
+    const cardScale = scrollY ? scrollY.interpolate({
+        inputRange: [-1, 0, 100, 101],
+        outputRange: [1, 1, 0.95, 0.95],
+        extrapolate: 'clamp',
+    }) : 1;
+
+    const cardOpacity = scrollY ? scrollY.interpolate({
+        inputRange: [-1, 0, 50, 100, 101],
+        outputRange: [1, 1, 0.9, 0.8, 0.8],
+        extrapolate: 'clamp',
+    }) : 1;
+
     return (
-        <TouchableOpacity
-            style={[
-                styles.container,
-                { backgroundColor: room.backgroundColor },
-                isSelected && styles.selectedContainer,
-            ]}
-            onPress={handlePress}
-            activeOpacity={0.8}
-        >
-            {/* Background Pattern */}
-            <View style={styles.backgroundPattern} />
+        <Animated.View style={[
+            styles.cardContainer,
+            {
+                transform: [
+                    { translateY: cardTranslateY },
+                    { scale: cardScale },
+                ],
+                opacity: cardOpacity,
+            }
+        ]}>
+            <TouchableOpacity
+                style={[
+                    styles.container,
+                    { backgroundColor: room.backgroundColor },
+                    isSelected && styles.selectedContainer,
+                ]}
+                onPress={handlePress}
+                activeOpacity={0.8}
+            >
+                {/* Background Pattern */}
+                <View style={styles.backgroundPattern} />
 
-            {/* Content */}
-            <View style={styles.content}>
-                <View style={styles.iconContainer}>
-                    <Text style={styles.roomEmoji}>{getRoomEmoji(room.icon)}</Text>
-                </View>
-
-                <Text style={styles.roomName}>{room.name}</Text>
-
-                <View style={styles.deviceInfo}>
-                    <View style={styles.deviceCount}>
-                        <Text style={styles.deviceDot}>●</Text>
-                        <Text style={styles.deviceCountText}>
-                            {activeDevices} of {totalDevices} active
-                        </Text>
+                {/* Content */}
+                <View style={styles.content}>
+                    <View style={styles.iconContainer}>
+                        <Text style={styles.roomEmoji}>{getRoomEmoji(room.icon)}</Text>
                     </View>
 
-                    <View style={styles.deviceBar}>
-                        <View
-                            style={[
-                                styles.deviceBarFill,
-                                { width: `${(activeDevices / totalDevices) * 100}%` }
-                            ]}
-                        />
+                    <Text style={styles.roomName}>{room.name}</Text>
+
+                    <View style={styles.deviceInfo}>
+                        <View style={styles.deviceCount}>
+                            <Text style={styles.deviceDot}>●</Text>
+                            <Text style={styles.deviceCountText}>
+                                {activeDevices} of {totalDevices} active
+                            </Text>
+                        </View>
+
+                        <View style={styles.deviceBar}>
+                            <View
+                                style={[
+                                    styles.deviceBarFill,
+                                    { width: `${(activeDevices / totalDevices) * 100}%` }
+                                ]}
+                            />
+                        </View>
                     </View>
                 </View>
-            </View>
 
-            {/* Selection Indicator */}
-            {isSelected && (
-                <View style={styles.selectedIndicator}>
-                    <Text style={styles.selectedEmoji}>✅</Text>
-                </View>
-            )}
+                {/* Selection Indicator */}
+                {isSelected && (
+                    <View style={styles.selectedIndicator}>
+                        <Text style={styles.selectedEmoji}>✅</Text>
+                    </View>
+                )}
 
-            {/* Hover Effect */}
-            <View style={styles.hoverEffect} />
-        </TouchableOpacity>
+                {/* Hover Effect */}
+                <View style={styles.hoverEffect} />
+            </TouchableOpacity>
+        </Animated.View>
     );
 };
 
 const styles = StyleSheet.create({
+    cardContainer: {
+        marginHorizontal: 8,
+    },
     container: {
         width: 140,
         height: 160,
         borderRadius: 24,
-        marginHorizontal: 8,
         position: 'relative',
         overflow: 'hidden',
         shadowColor: '#000',

@@ -137,9 +137,7 @@ const WeatherCard: React.FC<WeatherCardProps> = ({ scrollY }) => {
                 </View>
                 <View style={styles.conditionText}>
                     <Text style={styles.condition}>{weather.current.condition.text}</Text>
-                    <Text style={styles.feelsLike}>
-                        Feels like {formatTemperature(getFeelsLikeTemperature(), temperatureUnit)}
-                    </Text>
+
                 </View>
             </View>
             <View style={styles.weatherDetails}>

@@ -45,7 +45,7 @@ const mockRooms: Room[] = [
 
 const mockDevices: Device[] = [
     { id: '1', name: 'Smart Light', type: 'light', isOn: true, roomId: '1', icon: 'lightbulb', value: 80, unit: '%' },
-    { id: '2', name: 'Air Conditioner', type: 'ac', isOn: false, roomId: '1', icon: 'snowflake', value: 22, unit: '°C' },
+    { id: '2', name: 'Air Conditioner', type: 'ac', isOn: false, roomId: '1', icon: 'snowflake', value: 23, unit: '°C' },
     { id: '3', name: 'Smart TV', type: 'tv', isOn: true, roomId: '1', icon: 'tv' },
     { id: '4', name: 'Bedside Lamp', type: 'light', isOn: false, roomId: '2', icon: 'lightbulb', value: 60, unit: '%' },
     { id: '5', name: 'Ceiling Fan', type: 'fan', isOn: true, roomId: '2', icon: 'fan', value: 3, unit: 'speed' },

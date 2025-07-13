@@ -16,9 +16,7 @@ A modern, interactive mobile application for controlling smart home devices. Bui
 - **Quick Actions**: One-tap automation for common scenarios:
   - All Lights On/Off
   - AC Control
-  - Good Night Mode (turn off everything)
-  - Movie Mode (dim lights, turn on TV)
-  - Work Mode (office lights on)
+  - Greeting Mode
 - **Home Statistics**: Real-time overview of device usage and energy consumption
 - **Weather Integration**: Current weather conditions and temperature
 - **Energy Monitoring**: Track current, daily, and monthly energy usage

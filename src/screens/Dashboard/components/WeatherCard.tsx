@@ -7,9 +7,9 @@ import {
     ActivityIndicator,
     Animated,
 } from 'react-native';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { toggleTemperatureUnit } from '../store/smartHomeSlice';
-import { formatTemperature } from '../utils/helpers';
+import { useAppDispatch, useAppSelector } from '../../../store/hooks';
+import { toggleTemperatureUnit } from '../../../store/smartHomeSlice';
+import { formatTemperature } from '../../../utils/helpers';
 
 interface WeatherCardProps {
     scrollY?: Animated.Value;

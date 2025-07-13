@@ -6,8 +6,8 @@ import {
     TouchableOpacity,
     ScrollView,
 } from 'react-native';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { toggleDevice } from '../store/smartHomeSlice';
+import { useAppDispatch, useAppSelector } from '../../../store/hooks';
+import { toggleDevice } from '../../../store/smartHomeSlice';
 
 interface QuickAction {
     id: string;

@@ -6,9 +6,9 @@ import {
     TouchableOpacity,
     Animated,
 } from 'react-native';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { selectRoom } from '../store/smartHomeSlice';
-import { Room } from '../types';
+import { useAppDispatch, useAppSelector } from '../../../store/hooks';
+import { selectRoom } from '../../../store/smartHomeSlice';
+import { Room } from '../../../types';
 
 interface RoomCardProps {
     room: Room;

@@ -7,9 +7,9 @@ import {
     Switch,
     Animated
 } from 'react-native';
-import { useAppDispatch } from '../store/hooks';
-import { toggleDevice, updateDeviceValue } from '../store/smartHomeSlice';
-import { Device } from '../types';
+import { useAppDispatch } from '../../../store/hooks';
+import { toggleDevice, updateDeviceValue } from '../../../store/smartHomeSlice';
+import { Device } from '../../../types';
 
 interface DeviceCardProps {
     device: Device;

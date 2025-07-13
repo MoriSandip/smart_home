@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-    View,
     Text,
     StyleSheet,
     Animated,
@@ -9,7 +8,6 @@ import { getGreeting } from '../../../utils/helpers';
 
 interface DashboardHeaderProps {
     headerHeight: Animated.AnimatedInterpolation<string | number>;
-    headerOpacity: Animated.AnimatedInterpolation<string | number>;
     greetingOpacity: Animated.AnimatedInterpolation<string | number>;
     greetingScale: Animated.AnimatedInterpolation<string | number>;
     titleOpacity: Animated.AnimatedInterpolation<string | number>;
@@ -18,7 +16,6 @@ interface DashboardHeaderProps {
 
 const DashboardHeader: React.FC<DashboardHeaderProps> = ({
     headerHeight,
-    headerOpacity,
     greetingOpacity,
     greetingScale,
     titleOpacity,

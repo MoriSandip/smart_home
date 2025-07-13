@@ -2,11 +2,12 @@ import { WeatherData } from '../types';
 
 const API_KEY = '4a9f20ca36b342f39c765139251307';
 const CITY = 'New Delhi';
+const BASE_URL = "http://api.weatherapi.com/v1/"
 
 export const fetchWeatherData = async (): Promise<WeatherData> => {
   try {
     const response = await fetch(
-      `http://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${CITY}&aqi=no`
+      `${BASE_URL}current.json?key=${API_KEY}&q=${CITY}&aqi=no`
     );
     const data = await response.json();
 

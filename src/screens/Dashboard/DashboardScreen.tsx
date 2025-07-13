@@ -7,12 +7,12 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { fetchWeatherAsync, loadPersistedState } from '../../store/smartHomeSlice';
-import { styles, HEADER_SCROLL_DISTANCE } from './Dashboard.styles';
+import { styles, HEADER_SCROLL_DISTANCE } from './styles';
 import { DashboardHeader, RoomsSection } from './components';
-import WeatherCard from '../../components/WeatherCard';
-import EnergyCard from '../../components/EnergyCard';
-import QuickActions from '../../components/QuickActions';
-import DeviceStats from '../../components/DeviceStats';
+import WeatherCard from './components/WeatherCard';
+import EnergyCard from './components/EnergyCard';
+import QuickActions from '../RoomDetail/components/QuickActions';
+import DeviceStats from './components/DeviceStats';
 
 const DashboardScreen: React.FC = () => {
     const dispatch = useAppDispatch();

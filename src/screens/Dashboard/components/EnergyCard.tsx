@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Animated } from 'react-native';
-import { useAppSelector } from '../store/hooks';
+import { useAppSelector } from '../../../store/hooks';
 
 interface EnergyCardProps {
     scrollY?: Animated.Value;

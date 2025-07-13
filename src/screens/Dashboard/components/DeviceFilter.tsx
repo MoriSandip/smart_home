@@ -6,7 +6,7 @@ import {
     TouchableOpacity,
     ScrollView,
 } from 'react-native';
-import { Device } from '../types';
+import { Device } from '../../../types';
 
 interface DeviceFilterProps {
     devices: Device[];

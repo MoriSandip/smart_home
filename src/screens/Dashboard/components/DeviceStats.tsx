@@ -5,8 +5,8 @@ import {
     StyleSheet,
     ScrollView,
 } from 'react-native';
-import { useAppSelector } from '../store/hooks';
-import { Device } from '../types';
+import { useAppSelector } from '../../../store/hooks';
+import { Device } from '../../../types';
 
 interface StatCard {
     title: string;

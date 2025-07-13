@@ -7,8 +7,8 @@ import {
     TouchableOpacity,
     FlatList,
 } from 'react-native';
-import { useAppSelector } from '../store/hooks';
-import { Device, Room } from '../types';
+import { useAppSelector } from '../../../store/hooks';
+import { Device, Room } from '../../../types';
 
 interface DeviceSearchProps {
     onDeviceSelect: (device: Device) => void;

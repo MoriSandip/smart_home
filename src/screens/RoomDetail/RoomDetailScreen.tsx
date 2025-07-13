@@ -5,10 +5,10 @@ import {
     StatusBar,
 } from 'react-native';
 import { useAppSelector } from '../../store/hooks';
-import DeviceCard from '../../components/DeviceCard';
-import DeviceFilter from '../../components/DeviceFilter';
-import DeviceSearch from '../../components/DeviceSearch';
-import { styles } from './RoomDetail.styles';
+import DeviceCard from '../Dashboard/components/DeviceCard';
+import DeviceFilter from '../Dashboard/components/DeviceFilter';
+import DeviceSearch from './components/DeviceSearch';
+import { styles } from './styles';
 import { RoomDetailHeader, ProgressBar, EmptyState } from './components';
 import { Device } from '../../types';
 

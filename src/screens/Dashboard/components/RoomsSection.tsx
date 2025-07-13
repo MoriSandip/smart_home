@@ -6,7 +6,7 @@ import {
     FlatList,
 } from 'react-native';
 import { useAppSelector } from '../../../store/hooks';
-import RoomCard from '../../../components/RoomCard';
+import RoomCard from '../../RoomDetail/components/RoomCard';
 
 interface RoomsSectionProps {
     scrollY: any;

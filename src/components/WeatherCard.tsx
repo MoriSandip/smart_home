@@ -66,6 +66,30 @@ const WeatherCard: React.FC<WeatherCardProps> = ({ scrollY }) => {
         );
     }
 
+    // Get temperature based on current unit
+    const getCurrentTemperature = () => {
+        return temperatureUnit === 'C' ? weather.current.temp_c : weather.current.temp_f;
+    };
+
+    // Get feels like temperature based on current unit
+    const getFeelsLikeTemperature = () => {
+        return temperatureUnit === 'C' ? weather.current.feelslike_c : weather.current.feelslike_f;
+    };
+
+    // Get weather condition emoji based on condition text
+    const getWeatherEmoji = (conditionText: string): string => {
+        const condition = conditionText.toLowerCase();
+        if (condition.includes('rain') && condition.includes('thunder')) return '⛈️';
+        if (condition.includes('rain')) return '🌧️';
+        if (condition.includes('thunder')) return '⛈️';
+        if (condition.includes('cloud')) return '☁️';
+        if (condition.includes('sun') || condition.includes('clear')) return '☀️';
+        if (condition.includes('snow')) return '❄️';
+        if (condition.includes('fog') || condition.includes('mist')) return '🌫️';
+        if (condition.includes('wind')) return '💨';
+        return '🌤️';
+    };
+
     return (
         <Animated.View style={[
             styles.container,
@@ -79,7 +103,9 @@ const WeatherCard: React.FC<WeatherCardProps> = ({ scrollY }) => {
             <View style={styles.header}>
                 <View style={styles.titleContainer}>
                     <Text style={styles.title}>🌤️ Weather</Text>
-                    <Text style={styles.location}>📍 New York, NY</Text>
+                    <Text style={styles.location}>
+                        📍 {weather.location.name}, {weather.location.country}
+                    </Text>
                 </View>
                 <TouchableOpacity
                     style={styles.toggleButton}
@@ -94,36 +120,40 @@ const WeatherCard: React.FC<WeatherCardProps> = ({ scrollY }) => {
             <View style={styles.weatherInfo}>
                 <View style={styles.temperatureContainer}>
                     <Text style={styles.temperature}>
-                        {formatTemperature(weather.temperature, temperatureUnit)}
+                        {formatTemperature(getCurrentTemperature(), temperatureUnit)}
                     </Text>
                     <View style={styles.temperatureIcon}>
                         <Text style={styles.temperatureEmoji}>🌡️</Text>
                     </View>
                 </View>
 
-                <View style={styles.conditionContainer}>
-                    <View style={styles.conditionIcon}>
-                        <Text style={styles.conditionEmoji}>☀️</Text>
-                    </View>
-                    <View style={styles.conditionText}>
-                        <Text style={styles.condition}>{weather.condition}</Text>
-                        <Text style={styles.feelsLike}>Feels like {formatTemperature(weather.temperature, temperatureUnit)}</Text>
-                    </View>
+
+            </View>
+            <View style={styles.conditionContainer}>
+                <View style={styles.conditionIcon}>
+                    <Text style={styles.conditionEmoji}>
+                        {getWeatherEmoji(weather.current.condition.text)}
+                    </Text>
+                </View>
+                <View style={styles.conditionText}>
+                    <Text style={styles.condition}>{weather.current.condition.text}</Text>
+                    <Text style={styles.feelsLike}>
+                        Feels like {formatTemperature(getFeelsLikeTemperature(), temperatureUnit)}
+                    </Text>
                 </View>
             </View>
-
             <View style={styles.weatherDetails}>
                 <View style={styles.detailItem}>
                     <Text style={styles.detailEmoji}>💨</Text>
-                    <Text style={styles.detailText}>12 km/h</Text>
+                    <Text style={styles.detailText}>{weather.current.wind_kph} km/h</Text>
                 </View>
                 <View style={styles.detailItem}>
                     <Text style={styles.detailEmoji}>💧</Text>
-                    <Text style={styles.detailText}>65%</Text>
+                    <Text style={styles.detailText}>{weather.current.humidity}%</Text>
                 </View>
                 <View style={styles.detailItem}>
                     <Text style={styles.detailEmoji}>👁️</Text>
-                    <Text style={styles.detailText}>10 km</Text>
+                    <Text style={styles.detailText}>{weather.current.vis_km} km</Text>
                 </View>
             </View>
         </Animated.View>
@@ -213,12 +243,14 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         gap: 12,
+        flex: 1,
+        justifyContent: 'flex-end',
     },
     conditionIcon: {
         width: 50,
         height: 50,
         borderRadius: 25,
-        backgroundColor: '#fff3cd',
+        backgroundColor: '#f8f9fa',
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -226,44 +258,47 @@ const styles = StyleSheet.create({
         fontSize: 24,
     },
     conditionText: {
-        alignItems: 'flex-start',
+        flex: 1,
+        alignItems: 'flex-end',
     },
     condition: {
-        fontSize: 18,
-        color: '#1a1a2e',
+        fontSize: 16,
         fontWeight: '600',
-        marginBottom: 2,
+        color: '#1a1a2e',
+        textAlign: 'right',
+        marginBottom: 4,
     },
     feelsLike: {
         fontSize: 12,
         color: '#6c757d',
         fontWeight: '500',
+        textAlign: 'right',
     },
     weatherDetails: {
         flexDirection: 'row',
-        justifyContent: 'space-around',
+        justifyContent: 'space-between',
         paddingTop: 16,
         borderTopWidth: 1,
         borderTopColor: '#f1f3f4',
     },
     detailItem: {
-        flexDirection: 'row',
         alignItems: 'center',
-        gap: 6,
+        flex: 1,
     },
     detailEmoji: {
-        fontSize: 16,
+        fontSize: 20,
+        marginBottom: 4,
     },
     detailText: {
         fontSize: 12,
+        fontWeight: '600',
         color: '#6c757d',
-        fontWeight: '500',
     },
     errorText: {
         fontSize: 16,
-        color: '#dc3545',
+        color: '#6c757d',
         textAlign: 'center',
-        fontWeight: '500',
+        padding: 20,
     },
 });
 

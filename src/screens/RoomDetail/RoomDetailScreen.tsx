@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import {
     SafeAreaView,
     FlatList,
@@ -6,25 +6,62 @@ import {
 } from 'react-native';
 import { useAppSelector } from '../../store/hooks';
 import DeviceCard from '../../components/DeviceCard';
+import DeviceFilter from '../../components/DeviceFilter';
+import DeviceSearch from '../../components/DeviceSearch';
 import { styles } from './RoomDetail.styles';
 import { RoomDetailHeader, ProgressBar, EmptyState } from './components';
+import { Device } from '../../types';
 
 const RoomDetailScreen: React.FC = () => {
     const { rooms, devices, selectedRoomId } = useAppSelector(
         (state) => state.smartHome
     );
+    const [filteredDevices, setFilteredDevices] = useState<Device[]>([]);
 
-    const selectedRoom = rooms.find(room => room.id === selectedRoomId);
-    const roomDevices = devices.filter(device =>
-        selectedRoom?.deviceIds.includes(device.id)
+    // Memoize the selected room to prevent unnecessary recalculations
+    const selectedRoom = useMemo(() =>
+        rooms.find(room => room.id === selectedRoomId),
+        [rooms, selectedRoomId]
     );
 
-    const activeDevices = roomDevices.filter(device => device.isOn).length;
-    const totalDevices = roomDevices.length;
+    // Memoize room devices to prevent infinite re-renders
+    const roomDevices = useMemo(() =>
+        devices.filter(device => selectedRoom?.deviceIds.includes(device.id)),
+        [devices, selectedRoom?.deviceIds]
+    );
 
-    const renderDeviceCard = ({ item }: { item: any }) => (
+    // Memoize device counts
+    const activeDevices = useMemo(() =>
+        roomDevices.filter(device => device.isOn).length,
+        [roomDevices]
+    );
+
+    const totalDevices = useMemo(() =>
+        roomDevices.length,
+        [roomDevices]
+    );
+
+    // Initialize filtered devices with all room devices
+    useEffect(() => {
+        setFilteredDevices(roomDevices);
+    }, [roomDevices]);
+
+    const handleFilterChange = useCallback((filtered: Device[]) => {
+        setFilteredDevices(filtered);
+    }, []);
+
+    const handleDeviceSelect = useCallback((device: Device) => {
+        // Navigate to the device's room if it's not the current room
+        if (device.roomId !== selectedRoomId) {
+            // This would typically navigate to the device's room
+            // For now, we'll just update the filtered devices to show this device
+            setFilteredDevices([device]);
+        }
+    }, [selectedRoomId]);
+
+    const renderDeviceCard = useCallback(({ item }: { item: Device }) => (
         <DeviceCard device={item} />
-    );
+    ), []);
 
     if (!selectedRoom) {
         return (
@@ -53,15 +90,28 @@ const RoomDetailScreen: React.FC = () => {
                 backgroundColor={selectedRoom.backgroundColor}
             />
 
+            {/* Device Search */}
+            <DeviceSearch onDeviceSelect={handleDeviceSelect} />
+
+            {/* Device Filter */}
+            <DeviceFilter
+                devices={roomDevices}
+                onFilterChange={handleFilterChange}
+            />
+
             {/* Devices Grid */}
             <FlatList
-                data={roomDevices}
+                data={filteredDevices}
                 renderItem={renderDeviceCard}
                 keyExtractor={(item) => item.id}
                 numColumns={2}
                 contentContainerStyle={styles.devicesGrid}
                 showsVerticalScrollIndicator={false}
-                ListEmptyComponent={<EmptyState type="no-devices" />}
+                ListEmptyComponent={
+                    <EmptyState
+                        type={roomDevices.length === 0 ? "no-devices" : "no-filtered-devices"}
+                    />
+                }
             />
         </SafeAreaView>
     );

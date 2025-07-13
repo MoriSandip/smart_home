@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     View,
     Text,
     StyleSheet,
     TouchableOpacity,
     Switch,
+    Animated
 } from 'react-native';
 import { useAppDispatch } from '../store/hooks';
-import { toggleDevice } from '../store/smartHomeSlice';
+import { toggleDevice, updateDeviceValue } from '../store/smartHomeSlice';
 import { Device } from '../types';
 
 interface DeviceCardProps {
@@ -16,9 +17,15 @@ interface DeviceCardProps {
 
 const DeviceCard: React.FC<DeviceCardProps> = ({ device }) => {
     const dispatch = useAppDispatch();
+    const [isExpanded, setIsExpanded] = useState(false);
+    const [sliderValue] = useState(new Animated.Value(device.value || 0));
 
     const handleToggle = () => {
         dispatch(toggleDevice(device.id));
+    };
+
+    const handleSliderChange = (value: number) => {
+        dispatch(updateDeviceValue({ deviceId: device.id, value }));
     };
 
     const getStatusColor = () => {
@@ -32,6 +39,8 @@ const DeviceCard: React.FC<DeviceCardProps> = ({ device }) => {
     const getBackgroundColor = () => {
         return device.isOn ? '#f8f9fa' : '#ffffff';
     };
+
+    const isDimmable = device.type === 'light' && device.value !== undefined;
 
     // Map device icons to emojis
     const getDeviceEmoji = (iconName: string) => {
@@ -47,8 +56,18 @@ const DeviceCard: React.FC<DeviceCardProps> = ({ device }) => {
         return emojiMap[iconName] || '⚪';
     };
 
+    const handleCardPress = () => {
+        if (isDimmable) {
+            setIsExpanded(!isExpanded);
+        }
+    };
+
     return (
-        <View style={[styles.container, { backgroundColor: getBackgroundColor() }]}>
+        <TouchableOpacity
+            style={[styles.container, { backgroundColor: getBackgroundColor() }]}
+            onPress={handleCardPress}
+            activeOpacity={0.9}
+        >
             {/* Header */}
             <View style={styles.header}>
                 <View style={[styles.iconContainer, { backgroundColor: device.isOn ? '#e3f2fd' : '#f8f9fa' }]}>
@@ -81,6 +100,20 @@ const DeviceCard: React.FC<DeviceCardProps> = ({ device }) => {
                 )}
             </View>
 
+            {/* Dimmable Slider */}
+            {isDimmable && device.isOn && (
+                <Animated.View style={[styles.sliderContainer, { opacity: isExpanded ? 1 : 0, height: isExpanded ? 60 : 0 }]}>
+                    <View style={styles.sliderTrack}>
+                        <View style={[styles.sliderFill, { width: `${device.value}%` }]} />
+                        <View style={[styles.sliderThumb, { left: `${device.value}%` }]} />
+                    </View>
+                    <View style={styles.sliderLabels}>
+                        <Text style={styles.sliderLabel}>0%</Text>
+                        <Text style={styles.sliderLabel}>100%</Text>
+                    </View>
+                </Animated.View>
+            )}
+
             {/* Status Bar */}
             <View style={styles.statusContainer}>
                 <View style={[styles.statusDot, { backgroundColor: getStatusColor() }]} />
@@ -97,7 +130,14 @@ const DeviceCard: React.FC<DeviceCardProps> = ({ device }) => {
                     <Text style={styles.activeEmoji}>⚡</Text>
                 </View>
             )}
-        </View>
+
+            {/* Expand Indicator */}
+            {isDimmable && (
+                <View style={styles.expandIndicator}>
+                    <Text style={styles.expandEmoji}>{isExpanded ? '▼' : '▲'}</Text>
+                </View>
+            )}
+        </TouchableOpacity>
     );
 };
 
@@ -118,6 +158,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#f1f3f4',
         position: 'relative',
+        minHeight: 140,
     },
     header: {
         flexDirection: 'row',
@@ -170,6 +211,41 @@ const styles = StyleSheet.create({
         fontSize: 8,
         color: '#28a745',
     },
+    sliderContainer: {
+        marginBottom: 16,
+        overflow: 'hidden',
+    },
+    sliderTrack: {
+        height: 6,
+        backgroundColor: '#e9ecef',
+        borderRadius: 3,
+        position: 'relative',
+        marginBottom: 8,
+    },
+    sliderFill: {
+        height: '100%',
+        backgroundColor: '#007AFF',
+        borderRadius: 3,
+    },
+    sliderThumb: {
+        position: 'absolute',
+        top: -4,
+        width: 14,
+        height: 14,
+        backgroundColor: '#007AFF',
+        borderRadius: 7,
+        borderWidth: 2,
+        borderColor: '#ffffff',
+    },
+    sliderLabels: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    sliderLabel: {
+        fontSize: 10,
+        color: '#6c757d',
+        fontWeight: '500',
+    },
     statusContainer: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -198,15 +274,30 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 12,
         right: 12,
-        width: 16,
-        height: 16,
-        borderRadius: 8,
+        width: 24,
+        height: 24,
+        borderRadius: 12,
         backgroundColor: 'rgba(40, 167, 69, 0.1)',
         justifyContent: 'center',
         alignItems: 'center',
     },
     activeEmoji: {
-        fontSize: 8,
+        fontSize: 12,
+    },
+    expandIndicator: {
+        position: 'absolute',
+        bottom: 8,
+        right: 8,
+        width: 20,
+        height: 20,
+        borderRadius: 10,
+        backgroundColor: 'rgba(0, 122, 255, 0.1)',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    expandEmoji: {
+        fontSize: 10,
+        color: '#007AFF',
     },
 });
 

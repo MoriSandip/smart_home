@@ -8,9 +8,11 @@ import { useNavigation } from '@react-navigation/native';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { fetchWeatherAsync, loadPersistedState } from '../../store/smartHomeSlice';
 import { styles, HEADER_SCROLL_DISTANCE } from './Dashboard.styles';
-import { DashboardHeader, QuickActions, RoomsSection } from './components';
+import { DashboardHeader, RoomsSection } from './components';
 import WeatherCard from '../../components/WeatherCard';
 import EnergyCard from '../../components/EnergyCard';
+import QuickActions from '../../components/QuickActions';
+import DeviceStats from '../../components/DeviceStats';
 
 const DashboardScreen: React.FC = () => {
     const dispatch = useAppDispatch();
@@ -98,6 +100,9 @@ const DashboardScreen: React.FC = () => {
                     <WeatherCard scrollY={scrollY} />
                     <EnergyCard scrollY={scrollY} />
                 </View>
+
+                {/* Device Statistics */}
+                <DeviceStats />
 
                 {/* Rooms Section */}
                 <RoomsSection scrollY={scrollY} />

@@ -120,17 +120,6 @@ const smartHomeSlice = createSlice({
             state.temperatureUnit = state.temperatureUnit === 'C' ? 'F' : 'C';
             AsyncStorage.setItem('temperatureUnit', state.temperatureUnit);
 
-            // Convert weather temperature
-            if (state.weather) {
-                const convertedTemp = convertTemperature(
-                    state.weather.temperature,
-                    state.weather.unit,
-                    state.temperatureUnit
-                );
-                state.weather.temperature = convertedTemp;
-                state.weather.unit = state.temperatureUnit;
-            }
-
             // Convert device temperatures
             state.devices.forEach(device => {
                 if (device.unit === '°C' || device.unit === '°F') {

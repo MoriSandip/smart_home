@@ -29,7 +29,7 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
             styles.header,
             {
                 height: headerHeight,
-                opacity: headerOpacity,
+                opacity: 1,
             }
         ]}>
             {/* Collapsed Title */}

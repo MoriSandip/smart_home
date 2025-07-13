@@ -15,7 +15,7 @@ export const styles = StyleSheet.create({
         paddingBottom: 20,
     },
     cardsContainer: {
-        marginBottom: 30,
+        marginBottom: 0,
     },
     bottomSpacing: {
         height: 20,

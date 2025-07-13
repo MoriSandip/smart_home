@@ -134,18 +134,9 @@ const styles = StyleSheet.create({
     },
     container: {
         width: 140,
-        height: 160,
         borderRadius: 24,
         position: 'relative',
         overflow: 'hidden',
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 4,
-        },
-        shadowOpacity: 0.15,
-        shadowRadius: 8,
-        elevation: 6,
     },
     selectedContainer: {
         transform: [{ scale: 1.05 }],

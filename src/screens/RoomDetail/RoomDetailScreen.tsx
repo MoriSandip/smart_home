@@ -51,10 +51,7 @@ const RoomDetailScreen: React.FC = () => {
     }, []);
 
     const handleDeviceSelect = useCallback((device: Device) => {
-        // Navigate to the device's room if it's not the current room
         if (device.roomId !== selectedRoomId) {
-            // This would typically navigate to the device's room
-            // For now, we'll just update the filtered devices to show this device
             setFilteredDevices([device]);
         }
     }, [selectedRoomId]);

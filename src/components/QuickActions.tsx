@@ -163,7 +163,7 @@ const QuickActions: React.FC = () => {
 
 const styles = StyleSheet.create({
     container: {
-        marginVertical: 20,
+        marginVertical: 0,
     },
     header: {
         paddingHorizontal: 20,
@@ -191,14 +191,6 @@ const styles = StyleSheet.create({
         marginRight: 12,
         position: 'relative',
         overflow: 'hidden',
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 4,
-        },
-        shadowOpacity: 0.15,
-        shadowRadius: 8,
-        elevation: 6,
     },
     actionContent: {
         flex: 1,

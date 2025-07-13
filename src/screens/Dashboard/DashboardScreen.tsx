@@ -65,7 +65,7 @@ const DashboardScreen: React.FC = () => {
     }, [dispatch]);
 
     // Navigate to room detail when a room is selected
-    React.useEffect(() => {
+    useEffect(() => {
         if (selectedRoomId) {
             navigation.navigate('RoomDetail' as never);
         }

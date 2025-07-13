@@ -137,9 +137,11 @@ const WeatherCard: React.FC<WeatherCardProps> = ({ scrollY }) => {
                 </View>
                 <View style={styles.conditionText}>
                     <Text style={styles.condition}>{weather.current.condition.text}</Text>
-
                 </View>
             </View>
+            <View style={{
+                height: 10
+            }} />
             <View style={styles.weatherDetails}>
                 <View style={styles.detailItem}>
                     <Text style={styles.detailEmoji}>💨</Text>
@@ -161,20 +163,12 @@ const WeatherCard: React.FC<WeatherCardProps> = ({ scrollY }) => {
 const styles = StyleSheet.create({
     container: {
         backgroundColor: '#ffffff',
-        borderRadius: 24,
+        borderRadius: 12,
         padding: 24,
         marginHorizontal: 20,
         marginVertical: 8,
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 4,
-        },
-        shadowOpacity: 0.08,
-        shadowRadius: 12,
-        elevation: 6,
-        borderWidth: 1,
-        borderColor: '#f1f3f4',
+        borderWidth: 0.1,
+        borderColor: '#000',
     },
     header: {
         flexDirection: 'row',

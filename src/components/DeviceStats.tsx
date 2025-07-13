@@ -147,16 +147,9 @@ const styles = StyleSheet.create({
         borderRadius: 16,
         padding: 16,
         marginRight: 12,
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.08,
-        shadowRadius: 8,
-        elevation: 4,
-        borderWidth: 1,
-        borderColor: '#f1f3f4',
+
+        borderWidth: 0.1,
+        borderColor: '#000',
     },
     statIcon: {
         width: 40,

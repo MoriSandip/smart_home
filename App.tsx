@@ -1,14 +1,23 @@
 import React from 'react';
-import { Provider } from 'react-redux';
-import { store } from './src/store';
+import { NavigationContainer } from '@react-navigation/native';
+import { Provider, useSelector } from 'react-redux';
+import store, { RootState } from './src/redux/store';
+import AuthNavigator from './src/navigation/AuthNavigator';
 import AppNavigator from './src/navigation/AppNavigator';
 
-const App = () => {
-  return (
-    <Provider store={store}>
-      <AppNavigator />
-    </Provider>
-  );
+const Main = () => {
+    const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+    return (
+        <NavigationContainer>
+            {isAuthenticated ? <AppNavigator /> : <AuthNavigator />}
+        </NavigationContainer>
+    );
 };
 
-export default App;
+const App = () => (
+    <Provider store={store}>
+        <Main />
+    </Provider>
+);
+
+export default App; 

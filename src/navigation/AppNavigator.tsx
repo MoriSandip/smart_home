@@ -1,30 +1,29 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import DashboardScreen from '../screens/Dashboard';
-import RoomDetailScreen from '../screens/RoomDetail';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import HomeScreen from '../screens/app/HomeScreen';
+import CartScreen from '../screens/app/CartScreen';
+import SettingScreen from '../screens/app/SettingScreen';
+import NotificationScreen from '../screens/app/NotificationScreen';
+import FilterScreen from '../screens/app/FilterScreen';
 
-export type RootStackParamList = {
-    Dashboard: undefined;
-    RoomDetail: undefined;
+export type AppTabParamList = {
+    Home: undefined;
+    Cart: undefined;
+    Setting: undefined;
+    Notification: undefined;
+    Filter: undefined;
 };
 
-const Stack = createStackNavigator<RootStackParamList>();
+const Tab = createBottomTabNavigator<AppTabParamList>();
 
-const AppNavigator: React.FC = () => {
-    return (
-        <NavigationContainer>
-            <Stack.Navigator
-                initialRouteName="Dashboard"
-                screenOptions={{
-                    headerShown: false,
-                }}
-            >
-                <Stack.Screen name="Dashboard" component={DashboardScreen} />
-                <Stack.Screen name="RoomDetail" component={RoomDetailScreen} />
-            </Stack.Navigator>
-        </NavigationContainer>
-    );
-};
+const AppNavigator = () => (
+    <Tab.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>
+        <Tab.Screen name="Home" component={HomeScreen} />
+        <Tab.Screen name="Cart" component={CartScreen} />
+        <Tab.Screen name="Setting" component={SettingScreen} />
+        <Tab.Screen name="Notification" component={NotificationScreen} />
+        <Tab.Screen name="Filter" component={FilterScreen} />
+    </Tab.Navigator>
+);
 
 export default AppNavigator; 

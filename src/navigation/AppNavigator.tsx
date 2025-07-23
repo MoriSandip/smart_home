@@ -20,6 +20,7 @@ const AppNavigator: React.FC = () => {
                     headerShown: false,
                 }}
             >
+                
                 <Stack.Screen name="Dashboard" component={DashboardScreen} />
                 <Stack.Screen name="RoomDetail" component={RoomDetailScreen} />
             </Stack.Navigator>

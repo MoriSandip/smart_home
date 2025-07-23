@@ -15,7 +15,6 @@ export type AppTabParamList = {
 };
 
 const Tab = createBottomTabNavigator<AppTabParamList>();
-
 const AppNavigator = () => (
     <Tab.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>
         <Tab.Screen name="Home" component={HomeScreen} />
